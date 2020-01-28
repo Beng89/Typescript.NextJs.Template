@@ -1,0 +1,26 @@
+{
+  "name": "typescript-nextjs-template",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "node DevServer.js",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@zeit/next-css": "^1.0.1",
+    "isomorphic-unfetch": "^3.0.0",
+    "next": "9.1.6",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
+    "semantic-ui-react": "^0.88.2"
+  },
+  "devDependencies": {
+    "@types/node": "^13.1.1",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^0.20.0",
+    "typescript": "^3.7.4"
+  }
+}
