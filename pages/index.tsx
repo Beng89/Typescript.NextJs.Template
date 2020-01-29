@@ -28,7 +28,7 @@ const folders = [
   },
   {
     name: "cq/queries",
-    description: "QUery handlers and definitions"
+    description: "Query handlers and definitions"
   },
   {
     name: "hooks",
