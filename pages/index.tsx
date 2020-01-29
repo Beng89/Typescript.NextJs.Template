@@ -1,14 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NextPage } from 'next'
 import { DefaultPageLayout } from '../layouts/default/Page'
 import "./index.css"
-import { Header, Container, Divider, List } from 'semantic-ui-react'
-
+import { Header, Container, Divider, List, Input, Segment } from 'semantic-ui-react'
+import { withCommands } from '../cq/WithCommands'
+import { SendMessage } from '../cq/commands/SendMessage'
+import { withPubSub } from '../cq/WithPubSub'
+import { ConnectedMessageList } from '../components/ConnectedMessageList'
+import "../cq"
 
 const folders = [
   {
     name: "components",
     description: "Contains shared components for your application."
+  },
+  {
+    name: "cq",
+    description: "Contains command-query related things."
+  },
+  {
+    name: "cq/commands",
+    description: "Command handlers and definitions"
+  },
+  {
+    name: "cq/sagas",
+    description: "Sagas for handling events"
+  },
+  {
+    name: "cq/queries",
+    description: "QUery handlers and definitions"
   },
   {
     name: "hooks",
@@ -47,26 +67,64 @@ const FolderItem: React.FC<FolderItemProps> = props => {
   )
 }
 
-const Home: NextPage<{}> = () => (
-  <>
-    <DefaultPageLayout>
+const Home: NextPage<{}> = () => {
 
-      <Container>
-        <Header as="h1">Welcome to the template!</Header>
-        This page contains information on how to work with this template.
-        <Divider />
+  const dispatch = withCommands()
+  const pubsub = withPubSub()
 
-        <Header>The Folders</Header>
-        The folders are arranged so you can easily add models, hooks and components.
+  const [message, setMessage] = useState("")
 
-        <List>
-          {folders.map(folder => (
-            <FolderItem key={folder.name} folder={folder} />
-          ))}
-        </List>
-      </Container>
-    </DefaultPageLayout>
-  </>
-)
+  return (
+    <>
+      <DefaultPageLayout>
+
+        <Container>
+          <Header as="h1">Welcome to the template!</Header>
+          This page contains information on how to work with this template.
+          <Divider />
+
+          <Header>The Folders</Header>
+          The folders are arranged so you can easily add models, hooks and components.
+
+          <List>
+            {folders.map(folder => (
+              <FolderItem key={folder.name} folder={folder} />
+            ))}
+          </List>
+
+          <Divider />
+
+          <Header content="Message Demo" />
+          <Input type="text"
+            placeholder="Enter a message"
+            value={message}
+            onChange={(_, { value }) => {
+              setMessage(value);
+            }}
+
+            action={{
+              disabled: message?.length === 0 ?? false,
+              basic: true,
+              primary: true,
+              icon: "send",
+              content: "Send Message",
+              onClick() {
+
+                dispatch<SendMessage>("SendMessage", {
+                  message
+                })
+              }
+            }}
+          />
+
+          <Segment>
+            <ConnectedMessageList pubsub={pubsub} />
+          </Segment>
+          <Divider hidden />
+        </Container>
+      </DefaultPageLayout>
+    </>
+  )
+}
 
 export default Home
